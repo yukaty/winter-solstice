@@ -1,0 +1,355 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400&family=Cinzel:wght@500;600&family=Montserrat:wght@400&display=swap");
+
+:root {
+  /* Base Colors */
+  --night-blue: #151b3b;
+  --deep-winter: #1d2951;
+  --winter-frost: #8eaccd;
+  --snow-white: #ffffff;
+  --solstice-sun: #e2b13c;
+  --winter-shadow: #141832;
+
+  /* Functional Colors */
+  --overlay-dark: rgba(21, 27, 59, 0.95);
+  --overlay-light: rgba(255, 255, 255, 0.12);
+  --frost-blur: blur(8px);
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+
+  /* Fonts */
+  --font-decorative: "Cinzel Decorative", system-ui, -apple-system, serif;
+  --font-heading: "Cinzel", system-ui, -apple-system, serif;
+  --font-body: "Montserrat", system-ui, -apple-system, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding-top: 60px;
+  background: var(--night-blue);
+  color: var(--snow-white);
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+section {
+  scroll-margin-top: 60px;
+}
+
+section {
+  max-width: 800px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: var(--overlay-light);
+  backdrop-filter: var(--frost-blur);
+  border-radius: 8px;
+  box-shadow: 0 0 20px var(--winter-shadow);
+}
+
+h1 {
+  color: var(--solstice-sun);
+  font-family: var(--font-decorative);
+}
+
+h2,
+h3 {
+  color: var(--solstice-sun);
+  font-family: var(--font-heading);
+  font-weight: 500;
+}
+
+h2 {
+  font-size: clamp(1.8rem, 4vw, 2rem);
+  text-align: center;
+  margin: auto;
+}
+
+h3 {
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+  margin: 0;
+}
+
+/* Navigation */
+#main-nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 60px;
+  background: var(--overlay-dark);
+  backdrop-filter: var(--frost-blur);
+  z-index: 100;
+}
+
+#main-nav ul {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 1rem;
+  flex-wrap: wrap; /* for mobile */
+}
+
+#main-nav a {
+  color: var(--snow-white);
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  position: relative;
+  border-bottom: 2px solid transparent;
+  transition: border-color var(--transition-fast), color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+#main-nav a:hover,
+#main-nav a.active {
+  color: var(--solstice-sun);
+  background: var(--overlay-light);
+  border-bottom-color: var(--solstice-sun);
+}
+
+/* Main Header */
+#main-header {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: var(--night-blue);
+  color: var(--solstice-sun);
+}
+
+#main-header h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  text-align: center;
+  text-wrap: balance;
+  text-shadow: 0 0 10px var(--solstice-sun);
+  position: relative;
+  z-index: 1;
+  margin: 1rem;
+  max-width: 90%; /* for mobile */
+}
+
+/* Aurora Animation */
+#main-header::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(72, 161, 255, 0.4),
+    rgba(123, 97, 255, 0.4),
+    rgba(236, 72, 153, 0.3),
+    rgba(255, 153, 102, 0.3),
+    rgba(255, 230, 102, 0.3),
+    rgba(144, 224, 239, 0.3),
+    rgba(72, 161, 255, 0.4)
+  );
+  filter: blur(60px);
+  animation: aurora 10s infinite alternate ease-in-out;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+@keyframes aurora {
+  0% {
+    transform: translateX(-30%) translateY(0);
+  }
+  50% {
+    transform: translateX(30%) translateY(-10%);
+  }
+  100% {
+    transform: translateX(-30%) translateY(10%);
+  }
+}
+
+/* Introduction & Conclusion section */
+#introduction,
+#conclusion {
+  background: linear-gradient(to bottom, var(--deep-winter), var(--night-blue));
+  text-align: center;
+}
+
+/* Science section */
+#science {
+  position: relative;
+  padding-top: 2.5rem;
+}
+
+#science p {
+  position: relative;
+  padding-left: 2rem;
+  border-left: 2px solid var(--winter-frost);
+}
+
+/* Hemispheres section */
+.hemisphere {
+  padding: 2rem;
+  margin: 2rem 0;
+  border-radius: 8px;
+  background: var(--overlay-light);
+}
+
+#northern-hemisphere {
+  border-left: 4px solid var(--winter-frost);
+}
+
+#southern-hemisphere {
+  border-right: 4px solid var(--solstice-sun);
+}
+
+/* Celebrations section */
+.celebration {
+  padding: 2.5rem;
+  margin: 2.5rem 0;
+  border-radius: 12px;
+  background: var(--overlay-light);
+  position: relative;
+  padding-left: 6rem;
+}
+
+.celebration::before {
+  content: "";
+  position: absolute;
+  left: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-size: contain;
+  background-position: center;
+  transform: translateY(0.1rem);
+  filter: brightness(0.9) saturate(120%) invert(65%) sepia(60%)
+          hue-rotate(20deg) brightness(1) contrast(120%);
+  opacity: 0.9;
+}
+
+#newgrange::before {
+  background-image: url("./assets/images/icons/newgrange.svg");
+}
+
+#intiraymi::before {
+  background-image: url("./assets/images/icons/inti-raymi.svg");
+}
+
+#modranicht::before {
+  background-image: url("./assets/images/icons/modranicht.svg");
+}
+
+#koliada::before {
+  background-image: url("./assets/images/icons/koliada.svg");
+}
+
+/* Traditions section */
+#traditions ul {
+  list-style: none;
+  padding: 0;
+}
+
+#traditions li {
+  padding: 1.5rem;
+  margin: 1rem 0;
+  background: var(--overlay-light);
+  border-radius: 8px;
+}
+
+#traditions strong {
+  font-family: var(--font-heading);
+  color: var(--solstice-sun);
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1.4rem;
+}
+
+/* Footer */
+#main-footer {
+  background: var(--deep-winter);
+  padding: 2rem;
+  text-align: center;
+}
+
+#footer-nav ul {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+#footer-nav a {
+  color: var(--winter-frost);
+  text-decoration: none;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+#footer-nav a:hover,
+#footer-nav a:focus {
+  color: var(--solstice-sun);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  section {
+    margin: 2rem 1rem;
+    padding: 1.5rem;
+  }
+
+  #main-nav ul {
+    gap: 1rem;
+  }
+
+  #main-nav a {
+    padding: 0.5rem 1rem;
+  }
+
+  .celebration {
+    padding: 2rem;
+    padding-left: 5rem;
+  }
+
+  .celebration::before {
+    left: 1.5rem;
+    top: 2rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .hemisphere {
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+}
+
+/* High contrast mode */
+@media (forced-colors: active) {
+  #main-nav a:hover,
+  #main-nav a:focus,
+  #main-nav a.active {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Print styles */
+@media print {
+  #main-nav {
+    position: static;
+    background: none;
+  }
+
+  section {
+    break-inside: avoid;
+    background: none;
+    margin: 2rem 0;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
