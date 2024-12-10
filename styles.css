@@ -240,19 +240,19 @@ h3 {
 }
 
 #newgrange::before {
-  background-image: url("./assets/images/icons/newgrange.svg");
+  background-image: url("./assets/icons/newgrange.svg");
 }
 
 #intiraymi::before {
-  background-image: url("./assets/images/icons/inti-raymi.svg");
+  background-image: url("./assets/icons/inti-raymi.svg");
 }
 
 #modranicht::before {
-  background-image: url("./assets/images/icons/modranicht.svg");
+  background-image: url("./assets/icons/modranicht.svg");
 }
 
 #koliada::before {
-  background-image: url("./assets/images/icons/koliada.svg");
+  background-image: url("./assets/icons/koliada.svg");
 }
 
 /* Traditions section */

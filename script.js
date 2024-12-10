@@ -13,33 +13,20 @@ async function fetchAndDisplayPoem() {
   document.querySelector("#main-header").appendChild(poemContainer);
 
   try {
-    const response = await fetch(
-      // Hugging Face API
-      "https://api-inference.huggingface.co/models/google/gemma-2-2b-it",
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify({
-          inputs: "Write a poem about the winter solstice. Limit the poem to 20 words or fewer.",
-          parameters: {
-            return_full_text: false,
-            temperature: 0.8,
-            top_p: 0.9,
-            seed: Math.floor(Math.random() * 10000),
-          },
-        }),
-      }
-    );
+    // Call serverless function
+    const response = await fetch("/api/fetch-poem", { method: "GET" });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      const errorText = await response.text();
+      console.error(`Error: ${response.status}, Message: ${errorText}`);
+      poemContainer.textContent = `Error: ${errorText}`;
+      return;
     }
 
     const result = await response.json();
+    console.log("Poem response:", result);
 
+    // Display the poem
     const generatedText = result[0]?.generated_text || "Poem could not be loaded.";
     poemContainer.textContent = generatedText;
 
