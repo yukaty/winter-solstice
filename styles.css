@@ -111,7 +111,7 @@ h3 {
 
 /* Main Header */
 #main-header {
-  min-height: 80vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -167,6 +167,17 @@ h3 {
   100% {
     transform: translateX(-30%) translateY(10%);
   }
+}
+
+/* Poem */
+#poem-container {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  text-align: center;
+  color: var(--snow-white);
+  font-style: italic;
+  max-width: 80%;
+  line-height: 1.5;
 }
 
 /* Introduction & Conclusion section */
