@@ -8,7 +8,6 @@ export default async function handler(req, res) {
   try {
     // Hugging Face API
     const response = await fetch(
-    //   "https://api-inference.huggingface.co/models/google/gemma-2-2b-it",
       "https://api-inference.huggingface.co/models/google/gemma-1.1-7b-it",
       {
         method: "POST",

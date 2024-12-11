@@ -1,38 +1,34 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Poem generation
-  fetchAndDisplayPoem();
-
+  initializePoemDisplay();
   // Navigation and scroll handling
   initializeNavigation();
 });
 
-async function fetchAndDisplayPoem() {
-  const poemContainer = document.createElement("div");
-  poemContainer.id = "poem-container";
-  poemContainer.textContent = "Loading poem...";
-  document.querySelector("#main-header").appendChild(poemContainer);
+async function initializePoemDisplay() {
+  let poemContainer = document.getElementById("poem-container");
+
+  if (!poemContainer) {
+    poemContainer = createPoemContainer();
+    const contentWrapper = createContentWrapper();
+
+    poemContainer.appendChild(contentWrapper);
+    document.querySelector("#main-header").appendChild(poemContainer);
+  }
+
+  const poemText = poemContainer.querySelector("p");
+  poemText.textContent = "Loading poem...";
 
   try {
-    // Call serverless function
-    const response = await fetch("/api/fetch-poem", { method: "GET" });
+    const generatedText = await fetchPoem();
+    poemText.textContent = generatedText;
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`Error: ${response.status}, Message: ${errorText}`);
-      poemContainer.textContent = `Error: ${errorText}`;
-      return;
-    }
-
-    const result = await response.json();
-    console.log("Poem response:", result);
-
-    // Display the poem
-    const generatedText = result[0]?.generated_text || "Poem could not be loaded.";
-    poemContainer.textContent = generatedText;
-
+    const speakerButton = poemContainer.querySelector(".speaker-control");
+    setupSpeakerButton(speakerButton, generatedText);
   } catch (error) {
     console.error("Error fetching poem:", error);
-    poemContainer.textContent = "Failed to load the poem. Please try again later.";
+    poemText.textContent = error.message;
+    poemText.setAttribute("aria-live", "assertive");
   }
 }
 
@@ -40,6 +36,18 @@ function initializeNavigation() {
   const nav = document.getElementById("main-nav");
   const navLinks = nav.querySelectorAll("a");
   const sections = document.querySelectorAll("section");
+
+  // Add Hamburger Menu for Mobile
+  const menuToggle = document.createElement("button");
+  menuToggle.className = "menu-toggle";
+  menuToggle.innerHTML = "☰";
+  nav.prepend(menuToggle);
+
+  menuToggle.addEventListener("click", () => {
+    const navList = document.querySelector("#main-nav ul");
+    const isOpen = navList.classList.toggle("open");
+    menuToggle.setAttribute("aria-expanded", isOpen);
+  });
 
   // Smooth scroll to sections
   navLinks.forEach((link) => {
@@ -51,6 +59,12 @@ function initializeNavigation() {
       if (targetSection) {
         targetSection.scrollIntoView({ behavior: "smooth" });
         updateURL(targetId);
+
+        // Close menu on mobile after clicking a link
+        const navList = document.querySelector("#main-nav ul");
+        if (navList.classList.contains("open")) {
+          navList.classList.remove("open");
+        }
       }
     });
   });
@@ -64,6 +78,96 @@ function initializeNavigation() {
   updateActiveSection(sections, navLinks);
 }
 
+// =========================================
+// Poem Feature
+// =========================================
+async function fetchPoem() {
+  try {
+    const response = await fetch("/api/fetch-poem", { method: "GET" });
+
+    if (!response.ok) {
+      // HTTP error
+      throw new Error("Failed to fetch poem");
+    }
+
+    const result = await response.json();
+    return result[0]?.generated_text || "Failed to generate poem.";
+  } catch (error) {
+    // Network error
+    const errorMessage = navigator.onLine
+      ? "Failed to generate poem. Please try again later."
+      : "Please check your internet connection.";
+    throw new Error(errorMessage);
+  }
+}
+
+function createPoemContainer() {
+  const container = document.createElement("div");
+  container.id = "poem-container";
+  container.setAttribute("role", "article");
+  container.setAttribute("aria-label", "Winter Solstice Poem");
+
+  return container;
+}
+
+function createContentWrapper() {
+  const wrapper = document.createElement("div");
+  wrapper.className = "poem-content-wrapper";
+
+  const aiIcon = createAIIcon();
+
+  const poemText = document.createElement("p");
+  poemText.setAttribute("aria-live", "polite");
+
+  const speakerButton = createSpeakerButton();
+
+  wrapper.appendChild(aiIcon);
+  wrapper.appendChild(poemText);
+  wrapper.appendChild(speakerButton);
+
+  return wrapper;
+}
+
+function createAIIcon() {
+  const icon = document.createElement("span");
+  icon.className = "ai-icon";
+  icon.setAttribute("role", "img");
+  icon.setAttribute("aria-label", "AI Generated Content");
+  icon.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" fill="currentColor">
+      <path d="M234.7 42.7L197 56.8c-3 1.1-5 4-5 7.2s2 6.1 5 7.2l37.7 14.1L248.8 123c1.1 3 4 5 7.2 5s6.1-2 7.2-5l14.1-37.7L315 71.2c3-1.1 5-4 5-7.2s-2-6.1-5-7.2L277.3 42.7 263.2 5c-1.1-3-4-5-7.2-5s-6.1 2-7.2 5L234.7 42.7zM46.1 395.4c-18.7 18.7-18.7 49.1 0 67.9l34.6 34.6c18.7 18.7 49.1 18.7 67.9 0L529.9 116.5c18.7-18.7 18.7-49.1 0-67.9L495.3 14.1c-18.7-18.7-49.1-18.7-67.9 0L46.1 395.4zM484.6 82.6l-105 105-23.3-23.3 105-105 23.3 23.3zM7.5 117.2C3 118.9 0 123.2 0 128s3 9.1 7.5 10.8L64 160l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L128 160l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L128 96 106.8 39.5C105.1 35 100.8 32 96 32s-9.1 3-10.8 7.5L64 96 7.5 117.2zm352 256c-4.5 1.7-7.5 6-7.5 10.8s3 9.1 7.5 10.8L416 416l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L480 416l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L480 352l-21.2-56.5c-1.7-4.5-6-7.5-10.8-7.5s-9.1 3-10.8 7.5L416 352l-56.5 21.2z"/>
+    </svg>
+  `;
+  return icon;
+}
+
+function createSpeakerButton() {
+  const button = document.createElement("button");
+  button.className = "speaker-control";
+  button.setAttribute("aria-label", "Read poem aloud");
+  button.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="speaker-icon">
+      <path d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+    </svg>
+  `;
+  return button;
+}
+
+function setupSpeakerButton(button, text) {
+  button.onclick = () => {
+    if (!speechSynthesis) {
+      button.disabled = true;
+      return;
+    }
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "en-US";
+    speechSynthesis.speak(utterance);
+  };
+}
+
+// =========================================
+// Navitation Feature
+// =========================================
 function updateActiveSection(sections, navLinks) {
   const scrollPosition = window.scrollY + window.innerHeight / 3;
 
