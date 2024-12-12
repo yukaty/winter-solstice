@@ -16,12 +16,12 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         inputs:
-          "Write a poem about the winter solstice. Limit the poem to 20 words or fewer.",
+          "Write a poem about the winter solstice. Limit the poem to 12 words or fewer. Do not include word count in response.",
         parameters: {
           return_full_text: false,
           temperature: 0.8,
           top_p: 0.9,
-          seed: Math.floor(Math.random() * 10000),
+          // seed: Math.floor(Math.random() * 10000), // Temporarily disabled for performance optimization
         },
       }),
     });

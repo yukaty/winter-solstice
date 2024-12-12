@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400&family=Cinzel:wght@500;600&family=Montserrat:wght@400&display=swap");
-
 :root {
   /* Base Colors */
   --midnight-blue: #0a0e24;
@@ -61,7 +59,7 @@ h2 {
 }
 
 h3 {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
 }
 
 a:focus,
@@ -75,7 +73,7 @@ section {
   max-width: 800px;
   margin: 4rem auto;
   padding: 2rem;
-  background: var(--overlay-dark);
+  background: var(--midnight-blue);
   box-shadow: 0 0px 10px var(--frost-blue);
   border-radius: 8px;
 }
@@ -87,6 +85,13 @@ section {
   margin: 2rem 0;
   border-radius: 8px;
   background: var(--overlay-light);
+  transition: background 0.2s ease;
+}
+
+.celebration:hover,
+#traditions li:hover,
+.hemisphere:hover {
+  --overlay-light: rgba(255, 255, 255, 0.1);
 }
 
 /* Navigation */
@@ -94,19 +99,21 @@ section {
   position: fixed;
   top: 0;
   width: 100%;
-  height: 60px;
+  height: auto;
+  min-height: 60px;
   background: var(--overlay-dark);
   backdrop-filter: var(--frost-blur);
   z-index: 100;
+  transition: height var(--transition-fast);
 }
 
 #main-nav ul {
   display: flex;
   justify-content: center;
-  gap: 2rem;
+  gap: 0.5rem;
   list-style: none;
   margin: 0;
-  padding: 1rem;
+  padding: 1.5rem 0.5rem;
   flex-wrap: wrap;
 }
 
@@ -115,10 +122,10 @@ section {
   text-shadow: var(--text-shadow);
   text-decoration: none;
   font-size: 1rem;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.8rem;
   border-radius: 8px;
-  border-bottom: 2px solid transparent;
   transition: all var(--transition-fast);
+  text-align: center;
 }
 
 #main-nav a:hover,
@@ -126,7 +133,6 @@ section {
 #main-nav a.active {
   color: var(--solstice-sun);
   background: var(--interactive-hover);
-  border-bottom: 3px solid var(--solstice-sun);
 }
 
 /* Hamburger button */
@@ -152,14 +158,13 @@ section {
   position: relative;
   overflow: hidden;
   background: var(--midnight-blue);
-  color: var(--solstice-sun);
 }
 
 #main-header h1 {
-  font-size: clamp(2rem, 5vw, 4rem);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
   text-align: center;
-  text-wrap: balance;
-  text-shadow: 0 0 10px var(--solstice-sun);
+  text-shadow: 0 0 15px rgba(255, 208, 0, 0.5);
+  color: var(--solstice-sun);
   position: relative;
   z-index: 1;
   margin: 1rem;
@@ -182,7 +187,7 @@ section {
       rgba(255, 230, 102, 0.3),
       rgba(144, 224, 239, 0.3),
       rgba(72, 161, 255, 0.4));
-  filter: blur(60px);
+  filter: blur(50px);
   z-index: 0;
   opacity: 0.6;
   will-change: transform;
@@ -226,7 +231,7 @@ section {
   font-size: 1.2rem;
   font-style: italic;
   text-align: center;
-  text-shadow: 0 0 10px var(--solstice-sun);
+  text-shadow: 0 0px 4px var(--solstice-sun);
 }
 
 .ai-icon {
@@ -280,8 +285,14 @@ section {
 
 #science p {
   position: relative;
-  padding-left: 1.2rem;
-  border-left: 2px solid var(--frost-blue);
+  padding: 0 0.8rem 0 1.2rem;
+  margin-bottom: 1.5rem;
+  border-inline: 3px solid var(--frost-blue);
+  transition: border-color 0.3s ease;
+}
+
+#science p:hover {
+  border-color: var(--solstice-sun);
 }
 
 /* Hemispheres section */
@@ -303,6 +314,7 @@ section {
   position: relative;
   padding-left: 3rem;
   margin: 0 0 1rem;
+  min-height: 2.5rem;
 }
 
 .celebration p {
@@ -312,8 +324,9 @@ section {
 
 .celebration::before {
   content: "";
+  display: block;
   position: absolute;
-  top: 1.7rem;
+  top: 1.8rem;
   left: 2rem;
   width: 2.4rem;
   height: 2.4rem;
@@ -355,7 +368,7 @@ section {
   color: var(--solstice-sun);
   display: block;
   margin-bottom: 0.5rem;
-  font-size: 1.25rem;
+  font-size: 1.4rem;
   font-weight: 500;
 }
 
@@ -388,15 +401,55 @@ section {
   color: var(--solstice-sun);
 }
 
+/* Back to top button */
+#back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 3rem;
+  height: 3rem;
+  background: var(--midnight-blue);
+  color: var(--solstice-sun);
+  border: 2px solid var(--solstice-sun);
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(1rem);
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+#back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#back-to-top:hover {
+  background: var(--solstice-sun);
+  color: var(--midnight-blue);
+  transform: translateY(-0.25rem);
+}
+
+#back-to-top:active {
+  transform: translateY(0);
+  transition: transform 0.1s;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
 
   h2 {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
   }
 
   h3 {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
   }
 
   strong {
@@ -404,20 +457,21 @@ section {
   }
 
   body {
-    font-size: 0.95rem;
-    line-height: 1.4;
+    font-size: 1rem;
+    line-height: 1.5;
   }
 
   section {
     margin: 2rem 1rem;
-    padding: 1.5rem;
+    padding: 1.4rem;
+    box-shadow: 0 0px 4px var(--frost-blue);
   }
 
   .celebration,
   .hemisphere,
   #traditions li {
     margin: 1rem 0;
-    padding: 1.5rem;
+    padding: 1.4rem;
   }
 
   .menu-toggle {
@@ -478,6 +532,14 @@ section {
     padding: 0;
     text-align: center;
   }
+
+  #back-to-top {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.2rem;
+  }
 }
 
 /* High contrast mode support */
@@ -490,11 +552,9 @@ section {
 
   #main-nav a:hover,
   #main-nav a:focus,
-  #main-nav a.active {
-    border: 2px solid CanvasText;
-  }
-
-  .speaker-control {
+  #main-nav a.active,
+  .speaker-control,
+  #back-to-top {
     border: 2px solid CanvasText;
   }
 }
@@ -510,28 +570,37 @@ section {
 
 /* Print styles */
 @media print {
-  .menu-toggle {
-    display: none;
+  @page {
+    margin: 2cm;
   }
 
-  #main-nav {
-    position: static;
-    background: none;
+  * {
+    text-shadow: none !important;
+    background: none !important;
+    color: black !important;
+    box-shadow: none !important;
+    border-left: none !important;
+    border-right: none !important;
   }
 
-  #poem-container {
-    background: none;
-    border: 1px solid #000;
-    color: #000;
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
   }
 
   section {
     break-inside: avoid;
     background: none;
-    margin: 2rem 0;
   }
 
-  a {
-    text-decoration: underline;
+  .menu-toggle,
+  .speaker-control,
+  #main-nav,
+  #main-header::after,
+  #footer-nav,
+  #back-to-top,
+  .celebration::before {
+    display: none !important;
   }
+
 }

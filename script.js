@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initializePoemDisplay();
   // Navigation and scroll handling
   initializeNavigation();
+  // Back to top button
+  initializeBackToTop();
 });
 
 async function initializePoemDisplay() {
@@ -71,11 +73,60 @@ function initializeNavigation() {
 
   // Update active section while scrolling
   window.addEventListener("scroll", () => {
-    updateActiveSection(sections, navLinks);
-  });
+    // Control scroll event firing frequency
+    if (!window.requestAnimationFrame) {
+      updateActiveSection(sections, navLinks);
+      return;
+    }
+
+  // Execute in sync with animation frame
+  requestAnimationFrame(() => {
+      updateActiveSection(sections, navLinks);
+    });
+  }, { passive: true });
 
   // Initial check for active section
   updateActiveSection(sections, navLinks);
+}
+
+function initializeBackToTop() {
+  // Create button element
+  const backToTop = document.createElement('button');
+  backToTop.id = 'back-to-top';
+  backToTop.setAttribute('aria-label', 'Back to top');
+  backToTop.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 15l-6-6-6 6"/>
+    </svg>
+  `;
+
+  // Add to document
+  document.body.appendChild(backToTop);
+
+  // Handle scroll visibility
+  let scrollTimeout;
+  window.addEventListener('scroll', () => {
+    if (scrollTimeout) {
+      window.cancelAnimationFrame(scrollTimeout);
+    }
+
+    scrollTimeout = window.requestAnimationFrame(() => {
+      if (window.scrollY > 100) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    });
+  }, { passive: true });
+
+  // Handle click
+  backToTop.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
 }
 
 // =========================================
