@@ -58,6 +58,38 @@ h2 {
   margin: auto;
 }
 
+#science h2::after,
+#hemispheres h2::after,
+#celebrations h2::after,
+#traditions h2::after {
+  content: "";
+  display: block;
+  margin: 1rem auto;
+  width: 100%;
+  max-width: 500px;
+  height: 250px;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+}
+
+#science h2::after {
+  background-image: url("./assets/images/nasa-solstice.png");
+}
+
+#hemispheres h2::after {
+  background-image: url("./assets/images/nasa-earth.png");
+}
+
+#celebrations h2::after {
+  background-image: url("./assets/images/frozen-bubble-soap.png");
+}
+
+#traditions h2::after {
+  background-image: url("./assets/images/candlelight.png");
+}
+
 h3 {
   font-size: 1.5rem;
 }
@@ -78,20 +110,28 @@ section {
   border-radius: 8px;
 }
 
+.hemisphere,
 .celebration,
-#traditions li,
-.hemisphere {
+#traditions li {
   padding: 2rem;
   margin: 2rem 0;
   border-radius: 8px;
   background: var(--overlay-light);
-  transition: background 0.2s ease;
 }
 
-.celebration:hover,
-#traditions li:hover,
-.hemisphere:hover {
-  --overlay-light: rgba(255, 255, 255, 0.1);
+/* Scroll animation */
+section,
+.hemisphere,
+.celebration,
+#traditions li {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.animate-in {
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 /* Navigation */
@@ -289,10 +329,6 @@ section {
   margin-bottom: 1.5rem;
   border-inline: 3px solid var(--frost-blue);
   transition: border-color 0.3s ease;
-}
-
-#science p:hover {
-  border-color: var(--solstice-sun);
 }
 
 /* Hemispheres section */

@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeNavigation();
   // Back to top button
   initializeBackToTop();
+  // Scroll Animation
+  initializeScrollAnimations();
 });
 
 async function initializePoemDisplay() {
@@ -72,18 +74,22 @@ function initializeNavigation() {
   });
 
   // Update active section while scrolling
-  window.addEventListener("scroll", () => {
-    // Control scroll event firing frequency
-    if (!window.requestAnimationFrame) {
-      updateActiveSection(sections, navLinks);
-      return;
-    }
+  window.addEventListener(
+    "scroll",
+    () => {
+      // Control scroll event firing frequency
+      if (!window.requestAnimationFrame) {
+        updateActiveSection(sections, navLinks);
+        return;
+      }
 
-  // Execute in sync with animation frame
-  requestAnimationFrame(() => {
-      updateActiveSection(sections, navLinks);
-    });
-  }, { passive: true });
+      // Execute in sync with animation frame
+      requestAnimationFrame(() => {
+        updateActiveSection(sections, navLinks);
+      });
+    },
+    { passive: true }
+  );
 
   // Initial check for active section
   updateActiveSection(sections, navLinks);
@@ -91,9 +97,9 @@ function initializeNavigation() {
 
 function initializeBackToTop() {
   // Create button element
-  const backToTop = document.createElement('button');
-  backToTop.id = 'back-to-top';
-  backToTop.setAttribute('aria-label', 'Back to top');
+  const backToTop = document.createElement("button");
+  backToTop.id = "back-to-top";
+  backToTop.setAttribute("aria-label", "Back to top");
   backToTop.innerHTML = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <path d="M18 15l-6-6-6 6"/>
@@ -105,27 +111,90 @@ function initializeBackToTop() {
 
   // Handle scroll visibility
   let scrollTimeout;
-  window.addEventListener('scroll', () => {
-    if (scrollTimeout) {
-      window.cancelAnimationFrame(scrollTimeout);
-    }
-
-    scrollTimeout = window.requestAnimationFrame(() => {
-      if (window.scrollY > 100) {
-        backToTop.classList.add('visible');
-      } else {
-        backToTop.classList.remove('visible');
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (scrollTimeout) {
+        window.cancelAnimationFrame(scrollTimeout);
       }
-    });
-  }, { passive: true });
+
+      scrollTimeout = window.requestAnimationFrame(() => {
+        if (window.scrollY > 100) {
+          backToTop.classList.add("visible");
+        } else {
+          backToTop.classList.remove("visible");
+        }
+      });
+    },
+    { passive: true }
+  );
 
   // Handle click
-  backToTop.addEventListener('click', (e) => {
+  backToTop.addEventListener("click", (e) => {
     e.preventDefault();
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
+  });
+}
+
+function initializeScrollAnimations() {
+  const animatedElements = [
+    ...document.querySelectorAll(
+      ".hemisphere, .celebration, #traditions li, section"
+    ),
+  ];
+
+  // Create Intersection Observer instance
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("animate-in");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.2 } // Trigger when 20% of element is visible
+  );
+
+  const setInitialState = (element, index) => {
+    element.style.opacity = "0";
+
+    if (element.matches("section")) {
+      element.style.transform = "scale(0.95)";
+    } else if (element.classList.contains("hemisphere")) {
+      // Alternate direction for hemispheres
+      element.style.transform = `translateX(${index % 2 ? "30px" : "-30px"})`;
+    } else {
+      element.style.transform = "translateX(25px)";
+    }
+
+    observer.observe(element);
+  };
+
+  const resetState = (element) => {
+    element.style.opacity = "1";
+    element.style.transform = "none";
+    observer.unobserve(element);
+  };
+
+  // Initialize animations
+  animatedElements.forEach(setInitialState);
+
+  // Handle reduced motion preference
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  );
+  if (prefersReducedMotion.matches) {
+    animatedElements.forEach(resetState);
+  }
+
+  prefersReducedMotion.addEventListener("change", ({ matches }) => {
+    if (matches) {
+      animatedElements.forEach(resetState);
+    }
   });
 }
 
